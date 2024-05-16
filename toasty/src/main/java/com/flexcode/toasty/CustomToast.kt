@@ -184,7 +184,7 @@ fun BottomToast(
     toastType: ToastType = ToastType.ERROR,
     messageIcon: ImageVector = Icons.Default.Error,
     message: String = "OOps An Error Occurred try again later",
-    messageColor: Color = MaterialTheme.colorScheme.onPrimary,
+    messageColor: Color = MaterialTheme.colorScheme.onBackground,
     height: Dp = 60.dp,
     width: Dp? = null,
     onDismissCallback: @Composable () -> Unit = {},

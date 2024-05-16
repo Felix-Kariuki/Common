@@ -51,7 +51,7 @@ android {
 
 dependencies {
 
-    implementation(project(":Toasty"))
+    implementation(project(":toasty"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
