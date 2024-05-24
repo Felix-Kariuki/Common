@@ -161,15 +161,6 @@ fun TopToast(
                         modifier = modifier.padding(4.dp),
                         style = MaterialTheme.typography.bodyLarge
                     )
-//                    ResultTextComposable(
-//                        text = message, textColor = messageColor,
-//                        fontSize = 15.sp,
-//                        style = MaterialTheme.typography.bodyLarge,
-//                        textAlign = TextAlign.Center,
-//                        modifier = modifier.padding(
-//                            MaterialTheme.spacing.extraSmall,
-//                        ),
-//                    )
                 }
             }
 
@@ -275,15 +266,6 @@ fun BottomToast(
                         modifier = modifier.padding(4.dp)
                     )
 
-//                    ResultTextComposable(
-//                        text = message, textColor = messageColor,
-//                        fontSize = 15.sp,
-//                        style = MaterialTheme.typography.bodyLarge,
-//                        textAlign = TextAlign.Center,
-//                        modifier = modifier.padding(
-//                           4.dp
-//                        ),
-//                    )
                 }
 
             }
