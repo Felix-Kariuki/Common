@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.maven.publish)
+    alias(libs.plugins.compose.compiler)
+
 }
 
 android {
@@ -17,11 +19,14 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            isMinifyEnabled = true
         }
     }
     compileOptions {
@@ -51,7 +56,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.Felix-Kariuki"
             artifactId = "toasty"
-            version = "0.0.1"
+            version = "0.1.4"
 
             afterEvaluate {
                 from(components["release"])
