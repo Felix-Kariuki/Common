@@ -63,7 +63,7 @@ fun TopToast(
     height: Dp = 60.dp, messageIcon: ImageVector = Icons.Default.Done,
     showIcon: Boolean = true,
     width: Dp? = null, toastAlignment: Alignment = Alignment.TopCenter,
-    toastPadding: PaddingValues = PaddingValues(top = 56.dp, start = 16.dp, end = 16.dp),
+    toastPadding: PaddingValues = PaddingValues(top = 40.dp, start = 16.dp, end = 16.dp),
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     // onDismissCallback: @Composable () -> Unit = {},
     onDismissCallback: () -> Unit = {},
