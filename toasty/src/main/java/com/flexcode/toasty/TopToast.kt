@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -49,7 +52,8 @@ import kotlinx.coroutines.delay
  * @param height
  * @param toastAlignment  controls  where toast will be shown default[Alignment.TopCenter]
  * @param showIcon controls whether the icon is visible
- *
+ * @param style the [Typography] of the message text
+ * @param toastPadding [PaddingValues] controls the padding of the Toast component
  */
 @Composable
 fun TopToast(
@@ -59,6 +63,8 @@ fun TopToast(
     height: Dp = 60.dp, messageIcon: ImageVector = Icons.Default.Done,
     showIcon: Boolean = true,
     width: Dp? = null, toastAlignment: Alignment = Alignment.TopCenter,
+    toastPadding: PaddingValues = PaddingValues(top = 56.dp, start = 16.dp, end = 16.dp),
+    style: TextStyle = MaterialTheme.typography.bodyLarge,
     // onDismissCallback: @Composable () -> Unit = {},
     onDismissCallback: () -> Unit = {},
 ) {
@@ -124,7 +130,7 @@ fun TopToast(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Transparent)
-            .padding(top = 38.dp, start = 16.dp, end = 16.dp),
+            .padding(toastPadding)
     ) {
         Box(
             modifier = modifier
