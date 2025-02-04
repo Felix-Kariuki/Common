@@ -1,5 +1,9 @@
 package com.flexcode.toasty
 
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.DisplayMetrics
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -66,6 +70,7 @@ fun TopToast(
     toastPadding: PaddingValues = PaddingValues(top = 40.dp, start = 16.dp, end = 16.dp),
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     // onDismissCallback: @Composable () -> Unit = {},
+    transition: Long = 2000,
     onDismissCallback: () -> Unit = {},
 ) {
     var transitionStarted by remember { mutableStateOf(false) }
@@ -96,6 +101,7 @@ fun TopToast(
         label = "Slide parameter in DP",
     )
 
+    val context = LocalContext.current
 
     if (!animationStarted) {
         LaunchedEffect(Unit) {
@@ -109,7 +115,7 @@ fun TopToast(
             showMessage = true
 
             //transitioning back to circle
-            delay(2000)
+            delay(transition)
             transitionStarted = false
             showMessage = false
 
@@ -123,6 +129,38 @@ fun TopToast(
 
 
             //}
+        }
+    }
+
+    LaunchedEffect(toastType) {
+        if (toastType == ToastType.ERROR) {
+            // Trigger haptic feedback
+            // haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
+            // Optionally trigger vibration for stronger feedback
+//            val vibrator = context.getSystemService(Vibrator::class.java)
+//            if (vibrator?.hasVibrator() == true) {
+//                val vibrationEffect = VibrationEffect.createOneShot(
+//                    300,
+//                    VibrationEffect.DEFAULT_AMPLITUDE, // CHANGE
+//                )
+//                vibrator.vibrate(vibrationEffect)
+//
+//                val effect = VibrationEffect.createWaveform(
+//                    longArrayOf(0, 50, 50, 100),
+//                    -1,
+//                )
+//                vibrator.vibrate(effect)
+//            }
+
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val pattern = longArrayOf(0, 50, 50, 100) // iOS-style error vibration
+                val effect = VibrationEffect.createWaveform(pattern, -1) // No repeat
+                vibrator.vibrate(effect)
+            } else {
+                vibrator.vibrate(longArrayOf(0, 50, 50, 100), -1)
+            }
         }
     }
 
