@@ -71,6 +71,7 @@ fun TopToast(
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     // onDismissCallback: @Composable () -> Unit = {},
     transition: Long = 2000,
+    errorHaptic: Boolean = true,
     onDismissCallback: () -> Unit = {},
 ) {
     var transitionStarted by remember { mutableStateOf(false) }
@@ -133,30 +134,11 @@ fun TopToast(
     }
 
     LaunchedEffect(toastType) {
-        if (toastType == ToastType.ERROR) {
-            // Trigger haptic feedback
-            // haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-
-            // Optionally trigger vibration for stronger feedback
-//            val vibrator = context.getSystemService(Vibrator::class.java)
-//            if (vibrator?.hasVibrator() == true) {
-//                val vibrationEffect = VibrationEffect.createOneShot(
-//                    300,
-//                    VibrationEffect.DEFAULT_AMPLITUDE, // CHANGE
-//                )
-//                vibrator.vibrate(vibrationEffect)
-//
-//                val effect = VibrationEffect.createWaveform(
-//                    longArrayOf(0, 50, 50, 100),
-//                    -1,
-//                )
-//                vibrator.vibrate(effect)
-//            }
-
+        if (toastType == ToastType.ERROR && errorHaptic) {
             val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val pattern = longArrayOf(0, 50, 50, 100) // iOS-style error vibration
-                val effect = VibrationEffect.createWaveform(pattern, -1) // No repeat
+                val pattern = longArrayOf(0, 50, 50, 100)
+                val effect = VibrationEffect.createWaveform(pattern, -1)
                 vibrator.vibrate(effect)
             } else {
                 vibrator.vibrate(longArrayOf(0, 50, 50, 100), -1)
