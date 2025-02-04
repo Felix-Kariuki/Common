@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "Common"
 include(":app")
 include(":toasty")
+include(":otp")
