@@ -8,14 +8,13 @@ import com.flexcode.common.ui.theme.CommonTheme
 import com.flexcode.toasty.ToastAlignment
 import com.flexcode.toasty.ToastType
 import com.flexcode.toasty.Toastie
-import com.flexcode.toasty.TopToast
 
 @Composable
-fun SampleToasty(modifier: Modifier = Modifier) {
+fun SampleToasty() {
     Box {
         Toastie(
-            modifier, ToastType.SUCCESS,
-            "Uploaded successfully continue  ",
+            toastType = ToastType.SUCCESS,
+            message = "Uploaded successfully continue  ",
             onDismissCallback = {
 
             },
@@ -23,15 +22,14 @@ fun SampleToasty(modifier: Modifier = Modifier) {
         )
 
         Toastie(
-            modifier, ToastType.ERROR,
-            "Error",
+            toastType = ToastType.ERROR,
+            message = "Error",
             onDismissCallback = {
 
             },
             toastAlignment = ToastAlignment.BOTTOM,
             transition = 1000
         )
-
     }
 }
 
