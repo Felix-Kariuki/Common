@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.flexcode.toasty"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -54,7 +54,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.Felix-Kariuki"
             artifactId = "toasty"
-            version = "0.1.7"
+            version = "0.1.8"
 
             afterEvaluate {
                 from(components["release"])
