@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,7 +37,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -46,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
 /**
- * Custom Business triply toasty
+ * Custom toasty [Toastie]
  * @param modifier
  * @param toastType of type [ToastType] by default is [ToastType.SUCCESS]
  * @param messageColor the color of the message
@@ -54,22 +52,89 @@ import kotlinx.coroutines.delay
  * @param messageIcon icon on the toast
  * @param width
  * @param height
- * @param toastAlignment  controls  where toast will be shown default[Alignment.TopCenter]
- * @param showIcon controls whether the icon is visible
- * @param style the [Typography] of the message text
+ * @param toastAlignment [ToastAlignment] aligns the toast to either: [ToastAlignment.TOP],
+ * [ToastAlignment.BOTTOM]
+ * @param showIcon controls whether the icon is visible or not
+ * @param onDismissCallback Callback function to control what happens on dismiss the toast
  * @param toastPadding [PaddingValues] controls the padding of the Toast component
+ * @param backgroundColor the back ground color of the toast component
  */
+@Composable
+fun Toastie(
+    modifier: Modifier = Modifier,
+    toastType: ToastType = ToastType.SUCCESS,
+    message: String = "Success",
+    messageColor: Color = MaterialTheme.colorScheme.onBackground,
+    backgroundColor: Color = getColorForMessageType(toastType),
+    height: Dp = 60.dp,
+    messageIcon: ImageVector = Icons.Default.Done,
+    showIcon: Boolean = false,
+    width: Dp? = null,
+    toastAlignment: ToastAlignment = ToastAlignment.TOP,
+    toastPadding: PaddingValues = if (toastAlignment == ToastAlignment.TOP) {
+        PaddingValues(top = 40.dp, start = 16.dp, end = 16.dp)
+    } else {
+        PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp)
+    },
+    transition: Long = 2000,
+    errorHaptic: Boolean = true,
+    onDismissCallback: () -> Unit = {}
+) {
+    when (toastAlignment) {
+        ToastAlignment.TOP -> {
+            TopToast(
+                modifier = modifier,
+                toastType = toastType,
+                message = message,
+                messageColor = messageColor,
+                backgroundColor = backgroundColor,
+                height = height,
+                messageIcon = messageIcon,
+                showIcon = showIcon,
+                width = width,
+                toastPadding = toastPadding,
+                transition = transition,
+                errorHaptic = errorHaptic,
+                onDismissCallback = onDismissCallback
+            )
+        }
+
+        ToastAlignment.BOTTOM -> {
+            BottomToast(
+                modifier = modifier,
+                toastType = toastType,
+                messageIcon = messageIcon,
+                showIcon = showIcon,
+                message = message,
+                messageColor = messageColor,
+                backgroundColor = backgroundColor,
+                height = height,
+                toastPadding = toastPadding,
+                width = width,
+                onDismissCallback = onDismissCallback,
+                transition = transition,
+                errorHaptic = errorHaptic
+            )
+        }
+
+    }
+}
+
+@Deprecated(
+    message = "Top toast is now deprecated migrate it to Toastie",
+    replaceWith = ReplaceWith("Toastie")
+)
 @Composable
 fun TopToast(
     modifier: Modifier = Modifier,
     toastType: ToastType = ToastType.SUCCESS,
-    message: String = "Success", messageColor: Color = MaterialTheme.colorScheme.onBackground,
+    message: String = "Success",
+    messageColor: Color = MaterialTheme.colorScheme.onBackground,
+    backgroundColor: Color = getColorForMessageType(toastType),
     height: Dp = 60.dp, messageIcon: ImageVector = Icons.Default.Done,
-    showIcon: Boolean = true,
+    showIcon: Boolean = false,
     width: Dp? = null, toastAlignment: Alignment = Alignment.TopCenter,
     toastPadding: PaddingValues = PaddingValues(top = 40.dp, start = 16.dp, end = 16.dp),
-    style: TextStyle = MaterialTheme.typography.bodyLarge,
-    // onDismissCallback: @Composable () -> Unit = {},
     transition: Long = 2000,
     errorHaptic: Boolean = true,
     onDismissCallback: () -> Unit = {},
@@ -146,6 +211,7 @@ fun TopToast(
         }
     }
 
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -157,8 +223,8 @@ fun TopToast(
                 .size(boxWidth, boxHeight)
                 .offset(y = slideY)
                 .clip(clipShape)
-                .background(getColorForMessageType(toastType))
-                .align(alignment = toastAlignment),
+                .background(backgroundColor)
+                .align(alignment = Alignment.TopCenter),
             contentAlignment = Alignment.Center,
         ) {
             if (showMessage) {
@@ -195,16 +261,25 @@ fun TopToast(
     }
 }
 
+@Deprecated(
+    message = "Bottom toast is now deprecated migrate it to Toastie",
+    replaceWith = ReplaceWith("Toastie")
+)
 @Composable
-fun BottomToast(
+internal fun BottomToast(
     modifier: Modifier = Modifier,
     toastType: ToastType = ToastType.ERROR,
     messageIcon: ImageVector = Icons.Default.Error,
+    showIcon: Boolean = true,
+    backgroundColor: Color = getColorForMessageType(toastType),
     message: String = "OOps An Error Occurred try again later",
     messageColor: Color = MaterialTheme.colorScheme.onBackground,
     height: Dp = 60.dp,
+    toastPadding: PaddingValues = PaddingValues(16.dp),
     width: Dp? = null,
-    onDismissCallback: @Composable () -> Unit = {},
+    onDismissCallback: () -> Unit = {},
+    transition: Long = 2000,
+    errorHaptic: Boolean = true,
 ) {
     var transitionStarted by remember { mutableStateOf(false) }
     var clipShape by remember { mutableStateOf(CircleShape) }
@@ -235,6 +310,8 @@ fun BottomToast(
         label = "Slide parameter in DP",
     )
 
+    val context = LocalContext.current
+
     if (!animationStarted) {
         LaunchedEffect(Unit) {
             slideAnimation = false
@@ -246,7 +323,7 @@ fun BottomToast(
             showMessage = true
 
             //transitioning back to circle
-            delay(2000)
+            delay(transition)
             transitionStarted = false
             showMessage = false
 
@@ -259,18 +336,31 @@ fun BottomToast(
         }
     }
 
+    LaunchedEffect(toastType) {
+        if (toastType == ToastType.ERROR && errorHaptic) {
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val pattern = longArrayOf(0, 50, 50, 100)
+                val effect = VibrationEffect.createWaveform(pattern, -1)
+                vibrator.vibrate(effect)
+            } else {
+                vibrator.vibrate(longArrayOf(0, 50, 50, 100), -1)
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Transparent)
-            .padding(16.dp),
+            .padding(toastPadding),
     ) {
         Box(
             modifier = modifier
                 .size(boxWidth, boxHeight)
                 .offset(y = slideY)
                 .clip(clipShape)
-                .background(getColorForMessageType(toastType))
+                .background(backgroundColor)
                 .align(alignment = Alignment.BottomCenter),
             contentAlignment = Alignment.Center,
         ) {
@@ -278,12 +368,13 @@ fun BottomToast(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Spacer(modifier = modifier.padding(start = 8.dp))
-                    Icon(
-                        imageVector = messageIcon, contentDescription = message,
-                        tint = messageColor, modifier = modifier.size(20.dp),
-                    )
-
+                    if (showIcon) {
+                        Spacer(modifier = modifier.padding(start = 8.dp))
+                        Icon(
+                            imageVector = messageIcon, contentDescription = message,
+                            tint = messageColor, modifier = modifier.size(20.dp),
+                        )
+                    }
 
                     Text(
                         text = message,
@@ -305,18 +396,15 @@ fun BottomToast(
 @Composable
 fun TopToastPreview(modifier: Modifier = Modifier) {
     Box {
-
-        TopToast(
-
+        Toastie(
             modifier, ToastType.ERROR,
             "Uploaded successfully continue  ",
             onDismissCallback = {
 
             },
+            toastAlignment = ToastAlignment.BOTTOM
         )
 
-
         BottomToast(modifier, ToastType.ERROR)
-
     }
 }
