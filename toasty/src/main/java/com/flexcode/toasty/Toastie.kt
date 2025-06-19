@@ -144,7 +144,6 @@ fun TopToast(
     var slideDownAnimation by remember { mutableStateOf(true) }
     var animationStarted by remember { mutableStateOf(false) }
     var showMessage by remember { mutableStateOf(false) }
-    var dismissCallback by remember { mutableStateOf(false) }
 
     val displayMetrics: DisplayMetrics = LocalContext.current.resources.displayMetrics
     val screenWidthInDp = width ?: (displayMetrics.widthPixels / displayMetrics.density).dp
@@ -191,9 +190,8 @@ fun TopToast(
             clipShape = CircleShape
             slideDownAnimation = true
             animationStarted = true
-            dismissCallback = true
 
-
+            onDismissCallback()
             //}
         }
     }
@@ -256,7 +254,6 @@ fun TopToast(
                 }
             }
 
-            if (dismissCallback) onDismissCallback()
         }
     }
 }
