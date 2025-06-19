@@ -283,7 +283,6 @@ internal fun BottomToast(
     var slideAnimation by remember { mutableStateOf(true) }
     var animationStarted by remember { mutableStateOf(false) }
     var showMessage by remember { mutableStateOf(false) }
-    var dismissCallback by remember { mutableStateOf(false) }
 
     val displayMetrics: DisplayMetrics = LocalContext.current.resources.displayMetrics
     val screenHeightInDp = (displayMetrics.heightPixels / displayMetrics.density).dp
@@ -329,7 +328,8 @@ internal fun BottomToast(
             clipShape = CircleShape
             slideAnimation = true
             animationStarted = true
-            dismissCallback = true
+
+            onDismissCallback()
         }
     }
 
@@ -384,7 +384,6 @@ internal fun BottomToast(
 
             }
 
-            if (dismissCallback) onDismissCallback()
         }
     }
 }
